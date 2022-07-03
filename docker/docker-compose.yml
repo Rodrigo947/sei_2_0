@@ -29,6 +29,21 @@ services:
       sei_network:
         ipv4_address: 192.168.20.3
 
+  backend:
+    build:
+      context: ../backend
+    environment:
+      - NODE_PORT=7001
+      - TZ=America/Sao_Paulo
+    volumes:
+      - ../backend:/code
+    ports:
+      - 7001:7001
+      - 9229:9229
+    networks:
+      sei_network:
+        ipv4_address: 192.168.20.4
+
   frontend:
     build:
       context: ../frontend
