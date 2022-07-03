@@ -11,3 +11,12 @@ Depois de instalar o Docker, execute o seguinte comando dentro da pasta **docker
 
 Obs.: Caso o comando não funcione, pode ser que você não tenha o docker-compose instalado. Isso acontece principalmente em ambientes Linux. Para resolver siga os passos de instalação nesse <a href="https://docs.docker.com/compose/install/">LINK</a>.
 
+# For developers
+
+# Criando nova migration e aplicando no banco de dados
+
+Executar comando na pasta backend:
+
+```
+ $ npx prisma migrate dev
+```
