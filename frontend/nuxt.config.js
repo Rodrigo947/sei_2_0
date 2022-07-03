@@ -1,10 +1,8 @@
-import colors from 'vuetify/es5/util/colors'
-
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - frontend',
-    title: 'frontend',
+    titleTemplate: '%s - SEI 2.0',
+    title: 'SEI 2.0',
     htmlAttrs: {
       lang: 'en',
     },
@@ -18,7 +16,9 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  css: [
+    '@fortawesome/fontawesome-free/css/all.css', // https://fontawesome.com/search?m=free
+  ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [],
@@ -28,16 +28,15 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
-    // https://go.nuxtjs.dev/typescript
-    '@nuxt/typescript-build',
-    // https://go.nuxtjs.dev/vuetify
-    '@nuxtjs/vuetify',
+    '@nuxt/typescript-build', // https://go.nuxtjs.dev/typescript
+    '@nuxtjs/vuetify', // https://go.nuxtjs.dev/vuetify
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
+    '@nuxtjs/axios', // https://go.nuxtjs.dev/axios
+    '@nuxtjs/toast', // https://www.npmjs.com/package/@nuxtjs/toast
+    '@nuxtjs/auth-next', // https://auth.nuxtjs.org/status/
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -47,21 +46,49 @@ export default {
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
-  vuetify: {
-    customVariables: ['~/assets/variables.scss'],
-    theme: {
-      dark: true,
-      themes: {
-        dark: {
-          primary: colors.blue.darken2,
-          accent: colors.grey.darken3,
-          secondary: colors.amber.darken3,
-          info: colors.teal.lighten1,
-          warning: colors.amber.base,
-          error: colors.deepOrange.accent4,
-          success: colors.green.accent3,
+  vuetify: {},
+
+  toast: {
+    position: 'top-right',
+    duration: 6000,
+  },
+
+  router: {
+    // middleware: ['auth'],
+  },
+
+  auth: {
+    strategies: {
+      local: {
+        token: {
+          type: 'Token',
+          maxAge: 18000,
+        },
+        user: {
+          property: false,
+          autoFetch: true,
+        },
+        endpoints: {
+          login: {
+            url: '/accounts/login/',
+            method: 'post',
+          },
+          logout: {
+            url: '/accounts/logout/',
+            method: 'get',
+          },
+          user: {
+            url: '/accounts/users/me/',
+            method: 'get',
+          },
         },
       },
+    },
+    rewriteRedirects: false,
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      home: false,
     },
   },
 

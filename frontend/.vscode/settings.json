@@ -1,10 +1,13 @@
 {
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "Vue.volar",
   "editor.codeActionsOnSave": {
     "source.fixAll": true,
     "source.organizeImports": true,
   },
   "editor.tabSize": 2,
-  "editor.detectIndentation": false
-  
+  "editor.detectIndentation": false,
+  "volar.autoCompleteRefs": true,
+  "volar.autoWrapParentheses": true,
+  "volar.completion.autoImportComponent": true,
 }
