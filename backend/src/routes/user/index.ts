@@ -11,5 +11,4 @@ routersUser.use(listUser)
 routersUser.use(removeUser)
 routersUser.use(updateUser)
 
-
 export default routersUser

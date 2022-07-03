@@ -3,6 +3,6 @@ import routersUser from './user'
 
 const routes = Router()
 
-routes.use("/user",routersUser)
+routes.use('/user', routersUser)
 
 export default routes
