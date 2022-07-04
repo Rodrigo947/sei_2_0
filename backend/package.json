@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "migrate": "npx prisma migrate deploy",
+    "create-migrate": "npx prisma migrate dev",
+    "migrate-deploy": "npx prisma migrate deploy",
     "dev": "ts-node-dev --inspect=0.0.0.0:9229 --poll src/server.ts"
   },
   "keywords": [],
