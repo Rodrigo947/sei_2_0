@@ -50,7 +50,8 @@
         <v-card-actions>
           <v-spacer />
           <v-btn color="primary" @click="teste">
-            <v-icon dark> fa-solid fa-0 </v-icon>
+            <v-icon dark class="pr-1"> fa-solid fa-0 </v-icon>
+            Requisição ao backend
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -61,9 +62,16 @@
 <script>
 export default {
   name: 'IndexPage',
+  head: {
+    title: 'Index page',
+  },
   methods: {
-    teste() {
-      this.$toast.show("Erro")
+    async teste() {
+      this.$toast.show("Requisição ao backend. Verifique o console")
+
+      const response = await this.$axios.$post("/user/create")
+
+      console.log(response);
     }
   }
 }
