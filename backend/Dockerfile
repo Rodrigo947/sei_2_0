@@ -1,9 +1,13 @@
-FROM node:16
+FROM node:16-alpine
 
-WORKDIR /code
+WORKDIR /code/cache
 
-COPY . .
+COPY package.json ./
+COPY package-lock.json ./
 
 RUN npm install
 
-CMD [ "npm", "run", "dev" ]
+WORKDIR /code
+COPY . .
+
+ENTRYPOINT ["sh", "entrypoint.sh" ]

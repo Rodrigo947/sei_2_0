@@ -1,10 +1,7 @@
-FROM node:16
+FROM node:16-alpine
 
 WORKDIR /code
 
 COPY . .
 
-RUN npm install
-
-CMD [ "npm", "run", "dev" ]
-
+ENTRYPOINT ["sh", "entrypoint.sh" ]
