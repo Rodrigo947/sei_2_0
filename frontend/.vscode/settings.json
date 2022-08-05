@@ -1,15 +1,32 @@
 {
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "Vue.volar",
+  
   "editor.codeActionsOnSave": {
     "source.fixAll": true,
     "source.organizeImports": true,
   },
   "editor.tabSize": 2,
   "editor.detectIndentation": false,
-  "volar.autoCompleteRefs": true,
-  "volar.autoWrapParentheses": true,
-  "volar.completion.autoImportComponent": true,
+  "vetur.completion.autoImport": true,
+  "vetur.format.options.useTabs": true,
+  "vetur.format.defaultFormatterOptions": {
+    "js-beautify-html": {
+      "wrap_attributes": "force-expand-multiline"
+    },
+    "prettyhtml": {
+      "printWidth": 100,
+      "singleQuote": false,
+      "wrapAttributes": false,
+      "sortAttributes": false
+    }
+  },
+  
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "vue"
+  ],
+  
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#2f7c47",
     "activityBar.activeBorder": "#422c74",
