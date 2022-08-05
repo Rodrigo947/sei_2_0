@@ -10,6 +10,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum NivelAcesso {
+  SIGILOSO
+  RESTRITO
+  PUBLICO
+}
+
+enum Grupo {
+  PESSOAL
+  GESTAO
+}
+
+enum TipoRelacao {
+  PROPRIETARIO
+  INTERESSADO
+}
+
 model Unidade {
   id                          String                        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   nome                        String                        @db.VarChar(255)
@@ -23,7 +39,7 @@ model Unidade {
   uf                          String                        @db.VarChar(2)
   telefone                    String                        @db.VarChar(30)
   ProcessoConcluidoUnidade    ProcessoConcluidoUnidade[]
-  UnidadeInteressadaDocumento UnidadeInteressadaDocumento[]
+  UnidadeInteressadoDocumento UnidadeInteressadoDocumento[]
 
   @@map("unidade")
 }
@@ -47,15 +63,9 @@ model Usuario {
   Documento                  Documento[]
   AssinaturaDocumentoUsuario AssinaturaDocumentoUsuario[]
   Notificacao                Notificacao[]
-  UsuarioInteressadoProcesso UsuarioInteressadoProcesso[]
+  UsuarioRelacaoProcesso     UsuarioRelacaoProcesso[]
 
   @@map("usuario")
-}
-
-enum NivelAcesso {
-  SIGILOSO
-  RESTRITO
-  PUBLICO
 }
 
 model Processo {
@@ -66,18 +76,13 @@ model Processo {
   nivel_acesso     NivelAcesso
   concluido        Boolean     @default(false)
 
-  tipo_processo              TipoProcesso                 @relation(fields: [id_tipo_processo], references: [id])
-  Notificacao                Notificacao[]
-  ProcessoConcluidoUnidade   ProcessoConcluidoUnidade[]
-  UsuarioInteressadoProcesso UsuarioInteressadoProcesso[]
-  Documento                  Documento[]
+  tipo_processo            TipoProcesso               @relation(fields: [id_tipo_processo], references: [id])
+  Notificacao              Notificacao[]
+  ProcessoConcluidoUnidade ProcessoConcluidoUnidade[]
+  Documento                Documento[]
+  UsuarioRelacaoProcesso   UsuarioRelacaoProcesso[]
 
   @@map("processo")
-}
-
-enum Grupo {
-  PESSOAL
-  GESTAO
 }
 
 model TipoProcesso {
@@ -102,7 +107,7 @@ model Documento {
   tipo_documento              TipoDocumento                 @relation(fields: [id_tipo_documento], references: [id])
   processo                    Processo                      @relation(fields: [id_processo], references: [id])
   AssinaturaDocumentoUsuario  AssinaturaDocumentoUsuario[]
-  UnidadeInteressadaDocumento UnidadeInteressadaDocumento[]
+  UnidadeInteressadoDocumento UnidadeInteressadoDocumento[]
 
   @@map("documento")
 }
@@ -151,7 +156,7 @@ model ProcessoConcluidoUnidade {
   @@map("processo_concluido_unidade")
 }
 
-model UnidadeInteressadaDocumento {
+model UnidadeInteressadoDocumento {
   id           String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   id_unidade   String @db.Uuid
   id_documento String @db.Uuid
@@ -159,18 +164,18 @@ model UnidadeInteressadaDocumento {
   unidade   Unidade   @relation(fields: [id_unidade], references: [id])
   documento Documento @relation(fields: [id_documento], references: [id])
 
-  @@map("unidade_interessada_documento")
+  @@map("unidade_interessado_documento")
 }
 
-model UsuarioInteressadoProcesso {
-  id              String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  motivo          String      @db.VarChar(255)
-  nivel_de_acesso NivelAcesso
-  id_usuario      String      @db.Uuid
-  id_processo     String      @db.Uuid
+model UsuarioRelacaoProcesso {
+  id           String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  motivo       String      @db.VarChar(255)
+  tipo_relacao TipoRelacao
+  id_usuario   String      @db.Uuid
+  id_processo  String      @db.Uuid
 
   usuario  Usuario  @relation(fields: [id_usuario], references: [id])
   processo Processo @relation(fields: [id_processo], references: [id])
 
-  @@map("usuario_interessado_processo")
+  @@map("usuario_relacao_processo")
 }

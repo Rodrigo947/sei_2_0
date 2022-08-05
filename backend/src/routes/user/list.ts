@@ -10,7 +10,7 @@ listUser.post('/all', async (req, res) => {
 
 listUser.post('/:id', async (req, res) => {
   const { type, comment, screenshot } = req.body
-
+  let t = req.params.id
   return res.status(201).json({ msg: 'id' })
 })
 

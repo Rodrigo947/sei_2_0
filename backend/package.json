@@ -6,6 +6,7 @@
   "scripts": {
     "create-migrate": "dotenv -e .env.development npx prisma migrate dev",
     "migrate-deploy": "npx prisma migrate deploy",
+    "seed-dev": "dotenv -e .env.development ts-node prisma/seed.ts",
     "dev": "ts-node-dev --inspect=0.0.0.0:9229 --poll src/server.ts"
   },
   "keywords": [],

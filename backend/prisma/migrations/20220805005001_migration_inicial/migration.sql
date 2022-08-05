@@ -4,6 +4,9 @@ CREATE TYPE "NivelAcesso" AS ENUM ('SIGILOSO', 'RESTRITO', 'PUBLICO');
 -- CreateEnum
 CREATE TYPE "Grupo" AS ENUM ('PESSOAL', 'GESTAO');
 
+-- CreateEnum
+CREATE TYPE "TipoRelacao" AS ENUM ('PROPRIETARIO', 'INTERESSADO');
+
 -- CreateTable
 CREATE TABLE "unidade" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
@@ -114,23 +117,23 @@ CREATE TABLE "processo_concluido_unidade" (
 );
 
 -- CreateTable
-CREATE TABLE "unidade_interessada_documento" (
+CREATE TABLE "unidade_interessado_documento" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "id_unidade" UUID NOT NULL,
     "id_documento" UUID NOT NULL,
 
-    CONSTRAINT "unidade_interessada_documento_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "unidade_interessado_documento_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "usuario_interessado_processo" (
+CREATE TABLE "usuario_relacao_processo" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "motivo" VARCHAR(255) NOT NULL,
-    "nivel_de_acesso" "NivelAcesso" NOT NULL,
+    "tipo_relacao" "TipoRelacao" NOT NULL,
     "id_usuario" UUID NOT NULL,
     "id_processo" UUID NOT NULL,
 
-    CONSTRAINT "usuario_interessado_processo_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "usuario_relacao_processo_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -176,13 +179,13 @@ ALTER TABLE "processo_concluido_unidade" ADD CONSTRAINT "processo_concluido_unid
 ALTER TABLE "processo_concluido_unidade" ADD CONSTRAINT "processo_concluido_unidade_id_unidade_fkey" FOREIGN KEY ("id_unidade") REFERENCES "unidade"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "unidade_interessada_documento" ADD CONSTRAINT "unidade_interessada_documento_id_unidade_fkey" FOREIGN KEY ("id_unidade") REFERENCES "unidade"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "unidade_interessado_documento" ADD CONSTRAINT "unidade_interessado_documento_id_unidade_fkey" FOREIGN KEY ("id_unidade") REFERENCES "unidade"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "unidade_interessada_documento" ADD CONSTRAINT "unidade_interessada_documento_id_documento_fkey" FOREIGN KEY ("id_documento") REFERENCES "documento"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "unidade_interessado_documento" ADD CONSTRAINT "unidade_interessado_documento_id_documento_fkey" FOREIGN KEY ("id_documento") REFERENCES "documento"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "usuario_interessado_processo" ADD CONSTRAINT "usuario_interessado_processo_id_usuario_fkey" FOREIGN KEY ("id_usuario") REFERENCES "usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "usuario_relacao_processo" ADD CONSTRAINT "usuario_relacao_processo_id_usuario_fkey" FOREIGN KEY ("id_usuario") REFERENCES "usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "usuario_interessado_processo" ADD CONSTRAINT "usuario_interessado_processo_id_processo_fkey" FOREIGN KEY ("id_processo") REFERENCES "processo"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "usuario_relacao_processo" ADD CONSTRAINT "usuario_relacao_processo_id_processo_fkey" FOREIGN KEY ("id_processo") REFERENCES "processo"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
