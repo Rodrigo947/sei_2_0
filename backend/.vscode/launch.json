@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Docker: Attach to Node",
+      "name": "Container Node",
       "type": "node",
       "request": "attach",
       "restart": true,
@@ -11,6 +11,13 @@
       "localRoot": "${workspaceFolder}",
       "remoteRoot": "/code",
       "protocol": "inspector"
+    },
+    {
+      "name": "Local Node",
+      "type": "node",
+      "request": "attach",
+      "restart": true,
+      "port": 9229
     }
   ]
 }

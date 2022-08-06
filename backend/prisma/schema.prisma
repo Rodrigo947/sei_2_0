@@ -40,6 +40,7 @@ model Unidade {
   telefone                    String                        @db.VarChar(30)
   ProcessoConcluidoUnidade    ProcessoConcluidoUnidade[]
   UnidadeInteressadoDocumento UnidadeInteressadoDocumento[]
+  Usuario                     Usuario[]
 
   @@map("unidade")
 }
@@ -48,7 +49,10 @@ model Usuario {
   id                         String                       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   nome                       String                       @db.VarChar(255)
   sobrenome                  String                       @db.VarChar(255)
+  email                      String                       @unique @db.VarChar(255)
   cpf                        String                       @unique @db.VarChar(11)
+  matricula                  String?                      @unique @db.VarChar(255)
+  siape                      String?                      @unique @db.VarChar(255)
   senha                      String                       @db.VarChar(255)
   rg                         String                       @unique @db.VarChar(8)
   orgao_expeditor            String                       @db.VarChar(30)
@@ -60,10 +64,12 @@ model Usuario {
   bairro                     String                       @db.VarChar(255)
   cidade                     String                       @db.VarChar(255)
   uf                         String                       @db.VarChar(2)
+  id_unidade                 String?                      @db.Uuid
   Documento                  Documento[]
   AssinaturaDocumentoUsuario AssinaturaDocumentoUsuario[]
   Notificacao                Notificacao[]
   UsuarioRelacaoProcesso     UsuarioRelacaoProcesso[]
+  Unidade                    Unidade?                     @relation(fields: [id_unidade], references: [id])
 
   @@map("usuario")
 }

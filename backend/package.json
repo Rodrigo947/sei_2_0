@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "create-migrate": "dotenv -e .env.development npx prisma migrate dev",
-    "migrate-deploy": "npx prisma migrate deploy",
+    "create-migrate": "dotenv -e .env.development npx prisma migrate dev --create-only",
+    "reset-db": "dotenv -e .env.development npx prisma migrate reset",
     "seed-dev": "dotenv -e .env.development ts-node prisma/seed.ts",
-    "dev": "ts-node-dev --inspect=0.0.0.0:9229 --poll src/server.ts"
+    "dev-container": "ts-node-dev --inspect=0.0.0.0:9229 --poll src/server.ts",
+    "dev": "dotenv -e .env.development -- ts-node-dev --inspect=9229 src/server.ts"
   },
   "keywords": [],
   "author": "",

@@ -2,4 +2,4 @@
 
 npm install
 npm run migrate-deploy
-npm run dev
+npm run dev-container
