@@ -1,4 +1,5 @@
 export default {
+  ssr: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - SEI 2.0',
@@ -64,18 +65,18 @@ export default {
     strategies: {
       local: {
         token: {
-          required: false,
+          property: 'data.id',
+          maxAge: 86400,
         },
         user: {
           property: false,
-          autoFetch: false,
         },
         endpoints: {
           login: {
             url: '/auth/login',
             method: 'post',
           },
-          user: false,
+          user: { url: '/usuario/me', method: 'post' },
           logout: false,
         },
       },
@@ -84,7 +85,7 @@ export default {
     redirect: {
       login: '/login',
       logout: '/login',
-      home: false,
+      home: '/',
     },
   },
 

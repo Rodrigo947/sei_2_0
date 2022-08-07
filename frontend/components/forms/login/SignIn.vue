@@ -55,10 +55,7 @@ export default {
 
       await this.$auth
         .loginWith('local', { data: userSend })
-        .then((success) => {
-          this.$auth.setUser(success.data.data)
-          this.$router.push('/')
-        })
+
         .catch((error) => {
           this.$toast.error(error.response.data.msg)
         })

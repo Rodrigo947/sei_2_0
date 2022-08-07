@@ -29,24 +29,25 @@
                   <v-expansion-panel
                     v-for="item in tiposProcessos"
                     :key="item.grupo"
-                    @click="nomeSelecionado = undefined"
+                    @click="tipoSelecionado = undefined"
                   >
                     <v-expansion-panel-header>
                       {{ item.grupo }}
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
                       <v-chip-group
-                        v-model="nomeSelecionado"
+                        v-model="tipoSelecionado"
                         active-class="primary--text"
                         column
                       >
                         <v-chip
-                          v-for="nomeCategoria in item.nome"
-                          :key="nomeCategoria"
+                          v-for="tipo in item.tipos"
+                          :key="tipo.id"
+                          :value="tipo.id"
                           filter
                           outlined
                         >
-                          {{ nomeCategoria }}
+                          {{ tipo.nome }}
                         </v-chip>
                       </v-chip-group>
                     </v-expansion-panel-content>
@@ -71,13 +72,21 @@
                     label="Especificação"
                   ></v-text-field>
 
-                  <v-select
-                    v-model="unidadesSelecionadas"
-                    :items="unidadesDisponiveis"
-                    label="Unidades interessadas"
+                  <v-autocomplete
+                    v-model="usuariosInteressados"
+                    :items="usuariosDisponiveis"
+                    item-value="id"
+                    :item-text="getItemText"
+                    label="Interessados"
                     multiple
                     chips
-                  ></v-select>
+                  >
+                    <template #selection="{ item }">
+                      <v-chip>
+                        <span>{{ item.nome }} {{ item.sobrenome }}</span>
+                      </v-chip>
+                    </template>
+                  </v-autocomplete>
 
                   <v-textarea
                     v-model="observacoes"
@@ -149,9 +158,9 @@
 
                               <v-select
                                 v-model="novoDocumento.tipo"
+                                return-object
                                 :items="tiposDocumento"
                                 item-text="nome"
-                                item-value="id"
                                 :rules="[
                                   (v) => !!v || 'Este campo é obrigatório',
                                 ]"
@@ -165,16 +174,10 @@
                                 row
                               >
                                 <v-radio
-                                  label="Público"
-                                  value="PUBLICO"
-                                ></v-radio>
-                                <v-radio
-                                  label="Restrito"
-                                  value="RESTRITO"
-                                ></v-radio>
-                                <v-radio
-                                  label="Sigiloso"
-                                  value="SIGILOSO"
+                                  v-for="item in niveisDeAcesso"
+                                  :key="item.tipo"
+                                  :label="item.nome"
+                                  :value="item"
                                 ></v-radio>
                               </v-radio-group>
 
@@ -213,6 +216,12 @@
                       </v-dialog>
                     </v-toolbar>
                   </template>
+                  <template #[`item.tipo`]="{ item }">
+                    <div class="truncate">{{ item.tipo.nome }}</div>
+                  </template>
+                  <template #[`item.nivel_acesso`]="{ item }">
+                    <div class="truncate">{{ item.nivel_acesso.nome }}</div>
+                  </template>
                   <template #[`item.observacao`]="{ item }">
                     <div class="truncate">{{ item.observacao }}</div>
                   </template>
@@ -248,41 +257,27 @@ export default {
     step: 1,
 
     // STEP 1
-    tiposProcessos: [
-      {
-        grupo: 'Gestão',
-        nome: [
-          'Arrecadação',
-          'Avaliação de Documentos',
-          'Cadastro de Usuário Externo',
-          'Credenciamento de Segurança',
-        ],
-      },
-      {
-        grupo: 'Pessoal',
-        nome: ['Adicional Férias', 'Aposentadoria', 'Controle de Frequência'],
-      },
-    ],
+    tiposProcessos: [],
     grupoSelecionado: undefined,
-    nomeSelecionado: undefined,
+    tipoSelecionado: undefined,
     // STEP 1
 
     // STEP 2
-    unidadesDisponiveis: ['UFJF', 'UFMG'],
-
+    usuariosDisponiveis: [],
+    niveisDeAcesso: [
+      { nome: 'Público', tipo: 'PUBLICO' },
+      { nome: 'Restrito', tipo: 'RESTRITO' },
+      { nome: 'Sigiloso', tipo: 'SIGILOSO' },
+    ],
     especificacao: '',
-    unidadesSelecionadas: [],
+    usuariosInteressados: [],
     observacoes: '',
     nivel_acesso: 'PUBLICO',
     // STEP 2
 
     // STEP 3
     formDocumentoValido: false,
-    tiposDocumento: [
-      { id: '1', nome: 'Autorização' },
-      { id: '2', nome: 'Externo' },
-      { id: '3', nome: 'Ofício' },
-    ],
+    tiposDocumento: [],
 
     dialog: false,
     headers: [
@@ -301,14 +296,14 @@ export default {
     novoDocumento: {
       nome: undefined,
       tipo: undefined,
-      nivel_acesso: 'PUBLICO',
+      nivel_acesso: { nome: 'Público', tipo: 'PUBLICO' },
       observacao: undefined,
       arquivo: undefined,
     },
     defaultItem: {
       nome: undefined,
       tipo: undefined,
-      nivel_acesso: 'PUBLICO',
+      nivel_acesso: { nome: 'Público', tipo: 'PUBLICO' },
       observacao: undefined,
       arquivo: undefined,
     },
@@ -323,11 +318,16 @@ export default {
       val || this.close()
     },
   },
+  mounted() {
+    this.getTipoDocumento()
+    this.getTipoProcesso()
+    this.getUsuarios()
+  },
   methods: {
     goToStep2() {
       if (
         this.grupoSelecionado === undefined ||
-        this.nomeSelecionado === undefined
+        this.tipoSelecionado === undefined
       ) {
         this.$toast.error('Escolha um tipo de processo antes de prosseguir')
         return
@@ -355,12 +355,27 @@ export default {
       }
     },
 
-    salvarProcesso() {
+    async salvarProcesso() {
       if (this.documentos.length === 0) {
         this.$toast.clear()
         this.$toast.error('Adicione pelo menos um arquivo!')
         return
       }
+
+      const dataSend = {
+        id_usuario: this.$auth.user.id,
+        processo: {
+          id_tipo_processo: this.tipoSelecionado,
+          especificacao: this.especificacao,
+          observacoes: this.observacoes,
+          nivel_acesso: this.nivel_acesso,
+        },
+        usuariosInteressados: this.usuariosInteressados,
+        documentos: this.documentos,
+      }
+
+      console.log(dataSend)
+      await this.$axios.post('/processo/create', dataSend)
 
       this.$toast.clear()
       this.$toast.success('Processo criado!')
@@ -371,6 +386,25 @@ export default {
     toastErro() {
       this.$toast.clear()
       this.$toast.show('Funcionalidade não implementada')
+    },
+
+    getItemText(item) {
+      return `${item.nome} ${item.sobrenome}`
+    },
+
+    async getTipoDocumento() {
+      const result = await this.$axios.post('/tipo-documento/list')
+      this.tiposDocumento = result.data.data
+    },
+    async getTipoProcesso() {
+      const result = await this.$axios.post('/tipo-processo/list')
+      this.tiposProcessos = result.data.data
+    },
+    async getUsuarios() {
+      const result = await this.$axios.post('/usuario/all', {
+        ids: this.$auth.user.id,
+      })
+      this.usuariosDisponiveis = result.data.data
     },
   },
 }
