@@ -1,7 +1,10 @@
 <template>
   <v-navigation-drawer
     v-model="drawer"
-    permanent
+    app
+    clipped
+    disable-resize-watcher="false"
+    mobile-breakpoint="0"
     :mini-variant.sync="mini"
     color="white"
   >
@@ -20,24 +23,16 @@
     <v-divider></v-divider>
 
     <v-list dense>
-      <NuxtLink
-        v-for="item in itens"
-        :key="item.name"
-        :to="item.link"
-        :value="false"
-        class="no-text-decoration"
-      >
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ item.name }}
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </NuxtLink>
+      <v-list-item v-for="item in itens" :key="item.name" :to="item.link" link>
+        <v-list-item-icon>
+          <v-icon>{{ item.icon }}</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ item.name }}
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -48,7 +43,7 @@ export default {
   data() {
     return {
       mini: false,
-      drawer: this.$store.state.drawer,
+      drawer: true,
       itens: this.$store.state.menuItens.itens,
     }
   },

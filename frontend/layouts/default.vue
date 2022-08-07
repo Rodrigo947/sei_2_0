@@ -1,9 +1,9 @@
 <template>
   <v-app>
     <Header />
+    <Nav />
     <v-main class="background-main">
-      <Nav />
-      <v-container fluid>
+      <v-container fluid fill-height>
         <Nuxt />
       </v-container>
     </v-main>

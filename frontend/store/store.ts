@@ -1,6 +1,5 @@
 export const state = () => ({
   drawer: true,
-  showFormSignIn: true,
 })
 
 export const mutations = {

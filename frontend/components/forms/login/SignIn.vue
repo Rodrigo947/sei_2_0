@@ -22,7 +22,8 @@
         <v-col class="align-center justify-end d-flex">
           <v-btn
             type="submit"
-            color="indigo darken-1 white--text"
+            color="#0089c9"
+            dark
             :loading="loading"
             :disabled="loading"
           >
@@ -35,8 +36,6 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
-
 export default {
   data: () => ({
     user: {
@@ -48,10 +47,6 @@ export default {
   }),
 
   methods: {
-    ...mapMutations({
-      toggleShowFormSignIn: 'toggleShowFormSignIn',
-    }),
-
     async login() {
       const userSend = {
         ...this.user,
