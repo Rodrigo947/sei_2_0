@@ -1,17 +1,29 @@
+import { PrismaClient } from '@prisma/client'
 import { Router } from 'express'
-
+const prisma = new PrismaClient()
 const listUser = Router()
 
 listUser.post('/all', async (req, res) => {
-  const { type, comment, screenshot } = req.body
+  const idsToExclude = req.body.ids
+  const usuarios = await prisma.usuario.findMany({
+    select: {
+      id: true,
+      nome: true,
+      sobrenome: true,
+    },
+    where: { id: { not: idsToExclude } },
+    orderBy: [{ nome: 'asc' }, { sobrenome: 'asc' }],
+  })
 
-  return res.status(201).json({ msg: 'All' })
+  return res.status(201).json({ msg: '', data: usuarios })
 })
 
-listUser.post('/:id', async (req, res) => {
-  const { cpf, email, senha } = req.body
-  let t = req.params.id
-  return res.status(201).json({ msg: 'id' })
+listUser.post('/me', async (req, res) => {
+  const id = req.headers.authorization?.split(' ')[1]
+  const data = await prisma.usuario.findUnique({
+    where: { id: id },
+  })
+  return res.status(200).json(data)
 })
 
 export { listUser }

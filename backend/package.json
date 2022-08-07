@@ -6,6 +6,7 @@
   "scripts": {
     "create-migrate": "dotenv -e .env.development npx prisma migrate dev --create-only",
     "reset-db": "dotenv -e .env.development npx prisma migrate reset",
+    "reset-db-prod": "npx prisma migrate reset",
     "seed-dev": "dotenv -e .env.development ts-node prisma/seed.ts",
     "dev-container": "ts-node-dev --inspect=0.0.0.0:9229 --poll src/server.ts",
     "dev": "dotenv -e .env.development -- ts-node-dev --inspect=9229 src/server.ts",
@@ -13,7 +14,7 @@
     "seed-prod": "ts-node prisma/seed.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "production": "npm install && npm run migrate-deploy && npm run seed-prod && npm run build && npm run start"
+    "production": "npm install && npm run reset-db-prod && npm run migrate-deploy && npm run seed-prod && npm run build && npm run start"
   },
   "keywords": [],
   "author": "",
