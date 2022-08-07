@@ -79,6 +79,7 @@ model Processo {
   protocolo        Int         @unique @default(autoincrement())
   id_tipo_processo String      @db.Uuid
   especificacao    String      @db.VarChar(255)
+  observacoes      String?     @db.VarChar(255)
   nivel_acesso     NivelAcesso
   concluido        Boolean     @default(false)
 

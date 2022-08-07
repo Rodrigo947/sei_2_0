@@ -3,8 +3,7 @@
     v-model="drawer"
     app
     clipped
-    disable-resize-watcher="false"
-    mobile-breakpoint="0"
+    :disable-resize-watcher="disableResizeWatcher"
     :mini-variant.sync="mini"
     color="white"
   >
@@ -44,6 +43,7 @@ export default {
     return {
       mini: false,
       drawer: true,
+      disableResizeWatcher: false,
       itens: this.$store.state.menuItens.itens,
     }
   },
