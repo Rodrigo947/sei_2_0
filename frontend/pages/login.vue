@@ -23,11 +23,6 @@ export default {
   head: {
     title: 'Bem-vindo',
   },
-  computed: {
-    showFormSignIn() {
-      return this.$store.state.showFormSignIn
-    },
-  },
 }
 </script>
 

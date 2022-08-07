@@ -23,7 +23,7 @@
           <v-btn
             type="submit"
             color="#0089c9"
-            dark
+            class="text-color-white"
             :loading="loading"
             :disabled="loading"
           >
@@ -48,11 +48,11 @@ export default {
 
   methods: {
     async login() {
+      this.loading = true
       const userSend = {
         ...this.user,
       }
 
-      this.loading = true
       await this.$auth
         .loginWith('local', { data: userSend })
         .then((success) => {
@@ -73,5 +73,9 @@ export default {
 <style scoped>
 .min-width-300 {
   min-width: 300px;
+}
+
+.text-color-white {
+  color: white;
 }
 </style>
