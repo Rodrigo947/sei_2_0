@@ -245,7 +245,7 @@
 export default {
   name: 'HomePage',
   data: () => ({
-    step: 3,
+    step: 1,
 
     // STEP 1
     tiposProcessos: [
@@ -348,7 +348,6 @@ export default {
     adicionar() {
       if (this.$refs.formDocumento.validate()) {
         this.documentos.push(this.novoDocumento)
-        console.log(this.novoDocumento.arquivo)
         this.close()
       } else {
         this.$toast.clear()
