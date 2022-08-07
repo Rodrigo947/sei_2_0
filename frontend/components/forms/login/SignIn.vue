@@ -3,16 +3,14 @@
     <form @submit.prevent="login">
       <h1 class="mb-3">Bem Vindo</h1>
       <v-text-field
-        v-model="user.email"
-        v-mask="maskCPFOrPIS"
+        v-model="user.matriculaSiape"
         prepend-icon="mdi-account"
-        label="E-mail, CPF"
+        label="SIAPE ou Matrícula"
         required
-        @keyup="formatInputCPFOrPIS()"
       ></v-text-field>
 
       <v-text-field
-        v-model="user.password"
+        v-model="user.senha"
         label="Senha"
         required
         prepend-icon="mdi-lock"
@@ -42,10 +40,9 @@ import { mapMutations } from 'vuex'
 export default {
   data: () => ({
     user: {
-      email: '',
-      password: '',
+      matriculaSiape: '',
+      senha: '',
     },
-    maskCPFOrPIS: '',
     showPassword: false,
     loading: false,
   }),
@@ -59,26 +56,20 @@ export default {
       const userSend = {
         ...this.user,
       }
-      if (validarCPF(userSend.email) || validarPIS(userSend.email)) {
-        userSend.email = userSend.email.replace(/\./g, '').replace(/-/g, '')
-      }
 
       this.loading = true
       await this.$auth
         .loginWith('local', { data: userSend })
-        .catch(() => {
-          this.$toast.error('Login incorreto')
+        .then((success) => {
+          this.$auth.setUser(success.data.data)
+          this.$router.push('/')
+        })
+        .catch((error) => {
+          this.$toast.error(error.response.data.msg)
         })
         .finally(() => {
           this.loading = false
         })
-    },
-    formatInputCPF() {
-      if (validarCPF(this.user.email)) {
-        this.maskCPF = '###.###.###-##'
-        return 0
-      }
-      this.maskCPF = ''
     },
   },
 }

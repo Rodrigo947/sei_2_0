@@ -17,12 +17,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 html {
   overflow-y: hidden;
 }
 
 .bg_ice_white {
-  background-color: #f6f7ff;
+  background-color: #f6f7ff !important;
 }
 </style>

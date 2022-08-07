@@ -42,7 +42,10 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: `http://localhost:${process.env.NODE_PORT}`,
+    baseURL:
+      process.env.ENV === 'production'
+        ? process.env.BASE_URL_API
+        : 'http://localhost:3333',
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -54,33 +57,26 @@ export default {
   },
 
   router: {
-    // middleware: ['auth'],
+    middleware: ['auth'],
   },
 
   auth: {
     strategies: {
       local: {
         token: {
-          type: 'Token',
-          maxAge: 18000,
+          required: false,
         },
         user: {
           property: false,
-          autoFetch: true,
+          autoFetch: false,
         },
         endpoints: {
           login: {
-            url: '/accounts/login/',
+            url: '/auth/login',
             method: 'post',
           },
-          logout: {
-            url: '/accounts/logout/',
-            method: 'get',
-          },
-          user: {
-            url: '/accounts/users/me/',
-            method: 'get',
-          },
+          user: false,
+          logout: false,
         },
       },
     },
@@ -94,7 +90,7 @@ export default {
 
   server: {
     host: '0.0.0.0',
-    port: process.env.VUE_PORT || 3000,
+    port: process.env.ENV === 'production' ? process.env.VUE_PORT : 3000,
   },
 
   watchers: {

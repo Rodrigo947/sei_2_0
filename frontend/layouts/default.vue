@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <Nav />
     <Header />
     <v-main class="background-main">
+      <Nav />
       <v-container fluid>
         <Nuxt />
       </v-container>
