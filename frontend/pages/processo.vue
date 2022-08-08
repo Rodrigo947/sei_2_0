@@ -208,6 +208,15 @@
               <v-icon left small> mdi-file-sign </v-icon>
               Assinado
             </v-btn>
+            <v-btn
+              dark
+              x-small
+              class="yellow darken-2 mr-2"
+              @click="toastErro()"
+            >
+              <v-icon left small> mdi-eye </v-icon>
+              Visualizar
+            </v-btn>
 
             <v-btn dark x-small class="primary mr-2" @click="toastErro()">
               <v-icon left small> mdi-pencil </v-icon>
