@@ -81,6 +81,36 @@
           <template #top>
             <v-toolbar flat>
               <v-spacer></v-spacer>
+              <v-dialog v-model="dialogAssinar" max-width="500px">
+                <v-card>
+                  <v-card-title>
+                    <span class="text-h5">Assinatura de Documento</span>
+                  </v-card-title>
+
+                  <v-card-text>
+                    <v-text-field
+                      v-model="user.senha"
+                      label="Senha"
+                      required
+                      prepend-icon="mdi-lock"
+                      :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                      :type="showPassword ? 'text' : 'password'"
+                      @click:append="showPassword = !showPassword"
+                    />
+                  </v-card-text>
+
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" text @click="closeAssinar">
+                      Cancelar
+                    </v-btn>
+                    <v-btn color="blue darken-1" dark @click="assinar()">
+                      Assinar
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+
               <v-dialog v-model="dialog" max-width="500px">
                 <template #activator="{ on, attrs }">
                   <v-btn
@@ -163,7 +193,22 @@
           <template #[`item.tipo_documento`]="{ item }">
             <div class="truncate">{{ item.tipo_documento.nome }}</div>
           </template>
-          <template #[`item.actions`]>
+          <template #[`item.actions`]="{ item }">
+            <v-btn
+              v-if="item.AssinaturaDocumentoUsuario.length === 0"
+              dark
+              x-small
+              class="mr-2"
+              @click="showDialogAssinar(item.id)"
+            >
+              <v-icon left small> mdi-file-sign </v-icon>
+              Assinar
+            </v-btn>
+            <v-btn v-else x-small class="mr-2" disabled>
+              <v-icon left small> mdi-file-sign </v-icon>
+              Assinado
+            </v-btn>
+
             <v-btn dark x-small class="primary mr-2" @click="toastErro()">
               <v-icon left small> mdi-pencil </v-icon>
               Editar
@@ -195,6 +240,12 @@ export default {
     showDadosDoc: 'dados',
     tiposDocumento: [],
     dialog: false,
+    dialogAssinar: false,
+    showPassword: false,
+    idDocumento: '',
+    user: {
+      senha: '',
+    },
     headers: [
       {
         text: 'Nome',
@@ -272,6 +323,11 @@ export default {
       this.novoDocumento = Object.assign({}, this.defaultItem)
     },
 
+    closeAssinar() {
+      this.dialogAssinar = false
+      this.user.senha = ''
+    },
+
     async adicionar() {
       if (this.$refs.formDocumento.validate()) {
         const dataSend = {
@@ -288,11 +344,38 @@ export default {
 
         await this.$axios.post('/documento/create', dataSend)
 
+        this.getProcesso()
+        this.$toast.success('Documento Criado')
+
         this.close()
       } else {
         this.$toast.clear()
         this.$toast.error('Existem campos não preenchidos!')
       }
+    },
+
+    showDialogAssinar(idDocumento) {
+      this.idDocumento = idDocumento
+      this.dialogAssinar = true
+    },
+
+    async assinar() {
+      const dataSend = {
+        id_usuario: this.$auth.user.id,
+        senha: this.user.senha,
+        id_documento: this.idDocumento,
+      }
+
+      await this.$axios
+        .post('/documento/assinar', dataSend)
+        .then((response) => {
+          this.$toast.success(response.data.msg)
+          this.getProcesso()
+          this.closeAssinar()
+        })
+        .catch((error) => {
+          this.$toast.error(error.response.data.msg)
+        })
     },
 
     toastErro() {

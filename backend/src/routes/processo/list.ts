@@ -43,7 +43,7 @@ listProcesso.get('/', async (req, res) => {
           tipo_documento: true,
           nivel_de_acesso: true,
           AssinaturaDocumentoUsuario: {
-            where: { id: idUser as string },
+            where: { id_usuario: idUser as string },
           },
         },
       },
