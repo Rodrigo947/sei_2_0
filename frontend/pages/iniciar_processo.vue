@@ -226,10 +226,24 @@
                     <div class="truncate">{{ item.observacao }}</div>
                   </template>
                   <template #[`item.actions`]>
-                    <v-icon small class="mr-2" @click="toastErro()">
-                      mdi-pencil
-                    </v-icon>
-                    <v-icon small @click="toastErro()"> mdi-delete </v-icon>
+                    <v-btn
+                      dark
+                      x-small
+                      class="primary mr-2"
+                      @click="toastErro()"
+                    >
+                      <v-icon left small> mdi-pencil </v-icon>
+                      Editar
+                    </v-btn>
+                    <v-btn
+                      dark
+                      x-small
+                      class="red darken-2"
+                      @click="toastErro()"
+                    >
+                      <v-icon left small> mdi-delete </v-icon>
+                      Excluir
+                    </v-btn>
                   </template>
                   <template #no-data> Nenhum documento adicionado </template>
                 </v-data-table>

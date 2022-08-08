@@ -15,14 +15,19 @@
           <div class="truncate">{{ item.observacoes }}</div>
         </template>
         <template #[`item.actions`]="{ item }">
-          <v-icon
-            small
-            class="mr-2"
-            @click="editarProcesso(item.id_tipo_processo)"
+          <v-btn
+            dark
+            x-small
+            class="primary mr-2"
+            @click="editarProcesso(item.id)"
           >
-            mdi-pencil
-          </v-icon>
-          <v-icon small @click="toastErro()"> mdi-delete </v-icon>
+            <v-icon left small> mdi-pencil </v-icon>
+            Editar
+          </v-btn>
+          <v-btn dark x-small class="red darken-2" @click="toastErro()">
+            <v-icon left small> mdi-delete </v-icon>
+            Excluir
+          </v-btn>
         </template>
         <template #no-data> Nenhum documento adicionado </template>
       </v-data-table>
@@ -61,7 +66,10 @@ export default {
     },
 
     editarProcesso(idProcesso) {
-      this.$router.push({ path: '/processo', query: { id: idProcesso } })
+      this.$router.push({
+        path: '/processo',
+        query: { idProcesso, idUser: this.$auth.user.id },
+      })
     },
 
     async getProcessos() {
