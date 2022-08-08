@@ -90,7 +90,7 @@
                   <v-card-text>
                     <v-text-field
                       v-model="user.senha"
-                      label="Senha"
+                      label="Informe a senha do seu login"
                       required
                       prepend-icon="mdi-lock"
                       :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
