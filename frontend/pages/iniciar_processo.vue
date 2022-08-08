@@ -148,7 +148,7 @@
                               lazy-validation
                             >
                               <v-text-field
-                                v-model="novoDocumento.nome"
+                                v-model="novoDocumento.nome_arquivo"
                                 :rules="[
                                   (v) => !!v || 'Este campo é obrigatório',
                                 ]"
@@ -284,7 +284,7 @@ export default {
       {
         text: 'Nome',
         align: 'start',
-        value: 'nome',
+        value: 'nome_arquivo',
       },
       { text: 'Tipo', value: 'tipo' },
       { text: 'Nivel de Acesso', value: 'nivel_acesso' },
@@ -294,14 +294,14 @@ export default {
     documentos: [],
 
     novoDocumento: {
-      nome: undefined,
+      nome_arquivo: undefined,
       tipo: undefined,
       nivel_acesso: { nome: 'Público', tipo: 'PUBLICO' },
       observacao: undefined,
       arquivo: undefined,
     },
     defaultItem: {
-      nome: undefined,
+      nome_arquivo: undefined,
       tipo: undefined,
       nivel_acesso: { nome: 'Público', tipo: 'PUBLICO' },
       observacao: undefined,
@@ -362,6 +362,17 @@ export default {
         return
       }
 
+      const documentosSend = [...this.documentos]
+
+      for (const doc of documentosSend) {
+        doc.id_usuario_criador = this.$auth.user.id
+        doc.nivel_de_acesso = doc.nivel_acesso.tipo
+        doc.id_tipo_documento = doc.tipo.id
+        delete doc.nivel_acesso
+        delete doc.tipo
+        delete doc.arquivo
+      }
+
       const dataSend = {
         id_usuario: this.$auth.user.id,
         processo: {
@@ -371,10 +382,9 @@ export default {
           nivel_acesso: this.nivel_acesso,
         },
         usuariosInteressados: this.usuariosInteressados,
-        documentos: this.documentos,
+        documentos: documentosSend,
       }
 
-      console.log(dataSend)
       await this.$axios.post('/processo/create', dataSend)
 
       this.$toast.clear()
