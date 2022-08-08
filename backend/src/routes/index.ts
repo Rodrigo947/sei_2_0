@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import routersAuth from './auth'
+import routersDocumento from './documento'
 import routersProcesso from './processo'
 import routersTipoDocumento from './tipoDocumento'
 import routersTipoProcesso from './tipoProcesso'
@@ -14,5 +15,6 @@ routes.use('/tipo-documento', routersTipoDocumento)
 routes.use('/tipo-processo', routersTipoProcesso)
 routes.use('/processo', routersProcesso)
 routes.use('/unidade', routersUnidade)
+routes.use('/documento', routersDocumento)
 
 export default routes

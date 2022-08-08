@@ -8,6 +8,7 @@ listProcessoByUser.get('/all/:idUser', async (req, res) => {
   const idUser = req.query.idUser
   const data = await prisma.processo.findMany({
     select: {
+      id: true,
       id_tipo_processo: true,
       protocolo: true,
       nivel_acesso: true,
@@ -25,19 +26,30 @@ listProcessoByUser.get('/all/:idUser', async (req, res) => {
   return res.status(200).json({ data: data })
 })
 
-listProcesso.get('/:idProcesso', async (req, res) => {
+listProcesso.get('/', async (req, res) => {
   const idProcesso = req.query.idProcesso
+  const idUser = req.query.idUser
   const data = await prisma.processo.findFirst({
+    where: { id: idProcesso as string },
     select: {
       id: true,
       especificacao: true,
       observacoes: true,
       nivel_acesso: true,
-      Documento: true,
+      Documento: {
+        select: {
+          id: true,
+          nome_arquivo: true,
+          tipo_documento: true,
+          nivel_de_acesso: true,
+          AssinaturaDocumentoUsuario: {
+            where: { id: idUser as string },
+          },
+        },
+      },
       tipo_processo: true,
       UsuarioRelacaoProcesso: true,
     },
-    where: { id: idProcesso as string },
   })
   return res.status(200).json({ data: data })
 })
