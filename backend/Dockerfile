@@ -4,4 +4,6 @@ WORKDIR /code
 
 COPY . .
 
+RUN npm install
+
 ENTRYPOINT ["sh", "entrypoint.sh" ]

@@ -51,6 +51,7 @@ services:
       - VUE_PORT=7000
       - NODE_PORT=7001
       - TZ=America/Sao_Paulo
+      - BASE_URL_API=http://localhost:7001
     volumes:
       - ../frontend:/code
     ports:

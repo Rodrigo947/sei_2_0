@@ -43,10 +43,7 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL:
-      process.env.ENV === 'production'
-        ? process.env.BASE_URL_API
-        : 'http://localhost:3333',
+    baseURL: process.env.BASE_URL_API,
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -91,7 +88,7 @@ export default {
 
   server: {
     host: '0.0.0.0',
-    port: process.env.ENV === 'production' ? process.env.VUE_PORT : 3000,
+    port: process.env.VUE_PORT,
   },
 
   watchers: {
